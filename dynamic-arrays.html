@@ -1,0 +1,380 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en">
+<!--<![endif]-->
+	<head>
+            <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="author" content="Giorgos">
+
+
+        <title>/home/gkomninos/log/notes.log - Dynamic Arrays</title>
+
+            <link href="http://gkomninos.com/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="/home/gkomninos/log/notes.log Full Atom Feed" />
+            <link href="http://gkomninos.com/feeds/data-structures.atom.xml" type="application/atom+xml" rel="alternate" title="/home/gkomninos/log/notes.log Categories Atom Feed" />
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="http://gkomninos.com/theme/css/style.css">
+
+        <!-- Custom CSS -->
+        	<link rel="stylesheet" href="http://gkomninos.com/theme/css/colors/blue.css" id="colors">
+
+        <!-- Code highlight color scheme -->
+            <link href="http://gkomninos.com/theme/css/code_blocks/darkly.css" rel="stylesheet">
+
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+
+
+
+
+	                <meta property="og:locale" content="">
+		<meta property="og:site_name" content="/home/gkomninos/log/notes.log">
+
+	<meta property="og:type" content="article">
+	<meta property="article:author" content="">
+	<meta property="og:url" content="http://gkomninos.com/dynamic-arrays.html">
+	<meta property="og:title" content="Dynamic Arrays">
+	<meta property="og:description" content="">
+	   <meta property="og:image" content="http://gkomninos.com/images/guilherme-toti.jpg">
+	<meta property="article:published_time" content="2016-11-01 11:28:20+02:00">
+	</head>
+	<body>
+		<header id="header">
+			<!-- Container -->
+			<div class="container">
+				<!-- Logo / Mobile Menu -->
+				<div class="three columns">
+					<div id="logo">
+						<h1><a href="http://gkomninos.com/">/home/gkomninos/log/notes.log</a></h1>
+					</div>
+				</div>
+				<!-- Navigation
+				================================================== -->
+				<div class="thirteen columns">
+					
+					<nav id="navigation" class="menu">
+						<ul id="responsive">
+
+							<li><a href="http://gkomninos.com/">Home</a></li>
+
+
+						</ul>
+					</nav>
+				</div>
+			</div>
+			<!-- Container / End -->
+		</header>
+		<!-- Header / End -->
+		
+		<div id="content-wrapper">
+			<section id="titlebar">
+				<!-- Container -->
+				<div class="container">
+					<div class="sixteen columns">						
+						<nav id="breadcrumbs">
+							<ul>
+								<li>You are here:</li>
+								<li><a href="http://gkomninos.com/">Home</a></li>
+<li><a href="http://gkomninos.com/category/data-structures">data-structures</a></li>
+<li>Dynamic Arrays</li>
+							</ul>
+						</nav>
+					</div>
+
+				</div>
+				<!-- Container / End -->
+			</section>
+
+			<div class="container">
+	<div class="twelve alt columns">
+<article class="post" style="margin: 0; border: 0;">
+	
+	<div class="post-format">
+		<div class="circle"><i class="icon-pencil"></i><span></span></div>
+	</div>
+
+	<section class="post-content">
+
+		<header class="meta">
+			<h2><a href="http://gkomninos.com/dynamic-arrays.html">Dynamic Arrays</a></h2>
+			<ul>
+				<li>By <a href="http://gkomninos.com/author/giorgos.html">Giorgos</a></li>
+				<li>Tue 01 November 2016</li>
+			</ul>
+		</header>
+
+		<p><em>Arrays</em> are a data structure that 'hold' data in continuous piece of memory.
+The size of an array is not modified after it's creation.
+There are situations that we do not know in advance how large an array should
+be. In these situation we can use a <em>Dynamic</em> or <em>Unbounded</em> array.</p>
+<p>In an array we can access an element in constant time if we have it's position
+in the array. This fast random access property should also exists in the
+<em>Dynamic Array</em>.</p>
+<p>Basically the only difference of <em>Dynamic Array</em> with a &quot;normal&quot; array should
+be that we can add as many items as we need without having to know that
+beforhands.</p>
+<p>Here is the idea in pseudocode</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">DynamicArray</span><span class="o">&lt;</span><span class="n">ITEM</span><span class="o">&gt;</span><span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">growth_factor</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="kt">int</span> <span class="n">capacity</span>
+    <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">ITEM</span> <span class="o">*</span> <span class="n">items</span>
+
+    <span class="n">DynamicArray</span><span class="p">(</span><span class="n">t_capacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">capacity</span> <span class="o">=</span> <span class="n">t_capacity</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="k">new</span> <span class="n">items</span><span class="p">[</span><span class="n">capacity</span><span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="c1">// returns the i-th item</span>
+    <span class="n">ITEM</span><span class="o">&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+       <span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="c1">// adds one ITEM in the end of the array</span>
+    <span class="kt">void</span> <span class="n">append</span><span class="p">(</span><span class="n">ITEM</span> <span class="n">item</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">size</span><span class="o">&gt;=</span> <span class="n">capacity</span><span class="p">)</span>
+            <span class="n">reallocate</span><span class="p">()</span>
+        <span class="n">items</span><span class="p">[</span><span class="n">size</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span>
+        <span class="o">++</span><span class="n">size</span>
+    <span class="p">}</span>
+
+    <span class="c1">// adjusts the size of item</span>
+    <span class="c1">// it creates a new items array with an appropriate size</span>
+    <span class="c1">// and copies all the elements of the current array</span>
+    <span class="c1">// to the new memory location</span>
+    <span class="kt">void</span> <span class="n">reallocate</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">ITEM</span><span class="o">*</span> <span class="n">old</span> <span class="o">=</span> <span class="n">items</span>
+        <span class="n">capacity</span> <span class="o">=</span> <span class="n">growth_factor</span> <span class="o">*</span> <span class="n">capacity</span> <span class="c1">// the new capacity</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ITEM</span><span class="p">[</span><span class="n">capacity</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="n">in</span>  <span class="nl">old</span><span class="p">:</span>
+            <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">old</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">delete</span> <span class="n">old</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">delete</span> <span class="n">old</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table><p>The implementation idea is pretty clear. The trickiest part is the
+reallocate method.</p>
+<p>This method creates a new new items array with growth_factor times the
+previous capacity and copies all the items there and deallocates the previous
+memory.</p>
+<p>This seems and it is and expensive operation.</p>
+<p>This means that the cost of an append operation could be <span class="formula"><i>O</i>(<i>n</i>)</span> with n
+the current size of the DynamicArray.</p>
+<p>This is true if the size == capacity. But if we look at it carefully we
+should notice that this does not happen all time.
+Every time we reallocate we double the capacity so let's see an example:</p>
+<p>Let's imagine we have a Dynamic array of capacity 2 and add some integers</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">DynamicArray</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1">// capacity = 2, size = 0</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1">// capacity = 2, size = 1 -&gt; No reallocation needed</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1">// capacity =2, size =2 -&gt; No reallocation needed</span>
+</pre></div>
+</td></tr></table><p>Now we added 2 elements without calling the reallocate method in 0(1) time.</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// v now has capacity=2, size=2</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1">// size becomes 3</span>
+</pre></div>
+</td></tr></table><p>In this situation we need to call reallocate so we have to create a new
+place in memory and copy all the previous 2 items in the new items array.
+This takes 2 operations and one operation to add 3 to items. So the cost
+here is 0(n). Capacity is now doubled and became 4.</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// v has capacity=4 and size=3</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="c1">// no need to reallocate, size becomes 4</span>
+</pre></div>
+</td></tr></table><p>We added one more number in O(1) time.</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// v has capacity=4 and size=4</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1">// we need to reallocate</span>
+</pre></div>
+</td></tr></table><p>Similarly here we need to allocate a new items array and move all
+the elements to the new array. Also the capacity doubles and becomes 4.</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// v has capacity 8 and size=5</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="c1">// size=6</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="c1">// size = 7</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="c1">// size=8</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span> <span class="c1">// we need to reallocate, size=9, capacity=16</span>
+<span class="p">...</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span> <span class="c1">// size becomes 16, no need to reallocate</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">17</span><span class="p">)</span> <span class="c1">// we need to reallocate, capacity=32</span>
+<span class="p">...</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="c1">// size becomes 32, no need to reallocate</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">33</span><span class="p">)</span> <span class="c1">// we need to reallocate, capacity becomes 64</span>
+<span class="p">...</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span> <span class="c1">// size becomes 64, no need to reallocate</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">65</span><span class="p">)</span> <span class="c1">// we need to reallocate, capacity becodes 128</span>
+<span class="p">...</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">129</span><span class="p">)</span> <span class="c1">// reallocate , capacity becones 256</span>
+<span class="p">...</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">257</span><span class="p">)</span> <span class="c1">// reallocate, capacity becomes 512</span>
+<span class="p">...</span>
+<span class="n">v</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span> <span class="c1">// reallocate, capacity becomes 1024</span>
+</pre></div>
+</td></tr></table><p>As you see in the above example we inserted 512 items and we called reallocate
+only when size was 2, 4, 8, 16, 32, 64, 128, 512 so only 8 times
+(in every power of 2).</p>
+<p>Let's define the cost c</p>
+<p>So now let's define <cite>c_i</cite> the cost of the i-th insertion.</p>
+<blockquote>
+<dl class="docutils">
+<dt>if i-1 is a power of 2</dt>
+<dd>c_i = 1</dd>
+<dt>else</dt>
+<dd>c_i = 1 + i- 1</dd>
+</dl>
+</blockquote>
+<p>so the total cost of all operations is</p>
+<blockquote>
+sum(c_i) for i &lt;=n</blockquote>
+<p>we can rewrite sum(c_i) as</p>
+<blockquote>
+n + sum(c_i, i is every power of 2))</blockquote>
+<p>so the average cost per operation is</p>
+<blockquote>
+(n + sum(c_i, i every power of 2) / n  = O(n)/n = 0(1)</blockquote>
+<p>The above is a simplified explaination of the aggregate method in
+<em>Amortized analysis</em>
+We can clearly see that the insertion time has <em>amortized</em> cost of 0(1).</p>
+<p>For learning purposes I did my own implementation here:
+<a class="reference external" href="https://github.com/gosom/practice-cpp/blob/master/arrays/darray.h">https://github.com/gosom/practice-cpp/blob/master/arrays/darray.h</a></p>
+<p>In C++ STL has the Vector class that it is an implementation of Dymamic arrays.
+In jave there is the ArrayList and in python just the list.</p>
+<div class="section" id="references">
+<h2>References</h2>
+<ul class="simple">
+<li>Algorithms and Data Structures, K. Mehlhorn, P. Sanders, pages 66-74</li>
+<li><a class="reference external" href="https://www.coursera.org/learn/data-structures/lecture/EwbnV/dynamic-arrays">https://www.coursera.org/learn/data-structures/lecture/EwbnV/dynamic-arrays</a></li>
+</ul>
+</div>
+
+
+
+<div class="sharing">
+</div>
+<hr>
+		
+	</section>
+	<div class="clearfix"></div>
+
+</article>
+
+	</div>
+
+	<!-- Sidebar -->
+	<div class="four columns">
+
+		
+	</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Content Wrapper / End -->
+
+
+		<div id="footer-bottom">
+			<!-- Container -->
+			<div class="container">
+				<div class="eight columns">Blog powered by <a href="http://getpelican.com">Pelican</a></div>
+					<div class="eight columns">
+						<ul class="social-icons-footer">
+								<li>
+									<a href="#" class="tooltip top" title="You can add links in your config file">
+										<i class="icon-you can add links in your config file"></i>
+									</a>
+								</li>
+								<li>
+									<a href="#" class="tooltip top" title="Another social link">
+										<i class="icon-another social link"></i>
+									</a>
+								</li>
+							<li><a href="http://gkomninos.com/feeds/all.atom.xml" class="tooltip top" title="RSS"><i class="icon-rss"></i></a></li>
+						</ul>
+					</div>
+			</div>
+			<!-- Container / End -->
+		</div>
+		<!-- Footer Bottom / End -->
+		
+	<!-- Javascripts -->
+	<script src="http://gkomninos.com/theme/js/jquery.min.js"></script>
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-86665642-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+    </script>
+	</body>
+</html>
